@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: smart-question-bank-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: smart_question_bank
+
+  api:
+    build: ./server
+    container_name: smart-question-bank-api
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+      - uploads:/app/uploads
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/smart_question_bank
+      - CLIENT_URL=http://localhost:5173
+      - NODE_ENV=development
+    depends_on:
+      - mongodb
+
+  client:
+    build: ./client
+    container_name: smart-question-bank-client
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://api:5000
+    depends_on:
+      - api
+
+volumes:
+  mongodb_data:
+    driver: local
+  uploads:
+    driver: local
