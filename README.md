@@ -4,9 +4,9 @@
 
 **Live Application:** [https://secure-question-bank-client.vercel.app/](https://secure-question-bank-client.vercel.app/)
 
-**Submission Context:** Bachelor Final Year Project Abstract | MSc Computer Science Application  
+**Submission Context:** Bachelor Final Year Project Abstract
 **Prepared by:** Rafidul Hasib  
-**Date:** May 07, 2026
+
 
 ## Abstract
 
