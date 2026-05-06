@@ -9,6 +9,7 @@ import authRoutes from "./routes/authRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import questionRoutes from "./routes/questionRoutes.js";
+import { seedDemoData } from "./seed.js";
 import userRoutes from "./routes/userRoutes.js";
 import { uploadPath } from "./utils/uploads.js";
 
@@ -52,7 +53,10 @@ app.use(notFound);
 app.use(errorHandler);
 
 connectDb()
-  .then(() => {
+  .then(async () => {
+    if (process.env.SEED_DEMO_DATA !== "false") {
+      await seedDemoData();
+    }
     app.listen(port, () => {
       console.log(`Campus Question Vault API running on http://localhost:${port}`);
     });

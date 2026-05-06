@@ -1,5 +1,7 @@
 import "dotenv/config";
 import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import bcrypt from "bcryptjs";
 import { connectDb } from "./config/db.js";
 import Course from "./models/Course.js";
@@ -183,9 +185,7 @@ async function ensureDemoFiles(item, course) {
   };
 }
 
-try {
-  await connectDb();
-
+export async function seedDemoData() {
   const seededUsers = new Map();
   for (const item of users) {
     const user = await User.findOneAndUpdate(
@@ -242,9 +242,23 @@ try {
   }
 
   console.log("Seed complete.");
-  process.exit(0);
-} catch (error) {
-  console.error(`Seed failed: ${error.message}`);
-  console.error("Check that MongoDB is running and MONGO_URI is correct.");
-  process.exit(1);
+}
+
+async function runSeedCli() {
+  try {
+    await connectDb();
+    await seedDemoData();
+    process.exit(0);
+  } catch (error) {
+    console.error(`Seed failed: ${error.message}`);
+    console.error("Check that MongoDB is running and MONGO_URI is correct.");
+    process.exit(1);
+  }
+}
+
+const currentFile = fileURLToPath(import.meta.url);
+const entryFile = process.argv[1] ? path.resolve(process.argv[1]) : "";
+
+if (entryFile === currentFile) {
+  runSeedCli();
 }

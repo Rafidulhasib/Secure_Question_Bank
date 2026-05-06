@@ -5,7 +5,7 @@ services:
     plan: free
     rootDir: server
     buildCommand: npm install
-    startCommand: npm run seed && npm start
+    startCommand: npm start
     autoDeploy: true
     envVars:
       - key: NODE_ENV
@@ -20,3 +20,5 @@ services:
         value: 7d
       - key: CLIENT_URL
         sync: false
+      - key: SEED_DEMO_DATA
+        value: "true"

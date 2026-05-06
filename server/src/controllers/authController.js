@@ -53,10 +53,11 @@ export const register = asyncHandler(async (req, res) => {
     throw httpError(409, "Email already exists.");
   }
 
+  const superAdminExists = await User.exists({ role: "SuperAdmin" });
   const user = await User.create({
     name,
     email,
-    role: "User",
+    role: superAdminExists ? "User" : "SuperAdmin",
     emailVerifiedAt: new Date(),
     passwordHash: await bcrypt.hash(password, 12)
   });
